@@ -1,0 +1,63 @@
+# Library specific
+
+
+# DCData subfolders 
+Data/
+Maps/
+Raw/
+Doc/
+Prog/Temp/
+
+# SAS files
+*.sas7bdat
+*.sas7bcat
+*.log
+*.lst
+
+# Web
+*.html
+*.htm
+
+# MS Office
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+*.mdb
+*.mdbx
+*.pdf
+*.rtf
+
+# Raw files
+*.csv
+*.xml
+
+# Image files
+*.gif
+*.jpg
+*.jpeg
+*.bmp
+*.tiff
+*.png
+
+# ArcMap
+*.dbf
+*.mxd
+*.shp
+*.prj
+*.sbn
+*.sbx
+*.shx
+*.lyr
+
+# Archives
+*.zip
+*.rar
+
+# Temporary
+*.bak
+
+# Other
+Thumbs.db
