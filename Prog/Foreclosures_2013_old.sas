@@ -50,15 +50,13 @@
 
 	%Read_foreclosures(
 	  finalize=Y, 
-	  revisions = %str(Added verified thr. 12/31/13, unverified thr. 12/31/13)  ,
+	  revisions = %str(Added verified thr. 12/31/13, unverified thr. 12/3/13)  ,
 	  year = 2013,
 	  files = 
 
 	/** Verified data (include all YTD files) **/
-	   /*Foreclosures_2013_p1*/
-	   Foreclosures_2013_p1a
-	   Foreclosures_2013_p1b
-	   /*Foreclosures_2013_p2
+	   Foreclosures_2013_p1
+	   Foreclosures_2013_p2
 	   Foreclosures_2013_p3
 	   Foreclosures_2013_p4
 	   Foreclosures_2013_p5
@@ -116,7 +114,7 @@
 	   Foreclosures_2013_p61
 	   Foreclosures_2013_p62
 	   Foreclosures_2013_p63
-	   Foreclosures_2013_p64/*
+	   Foreclosures_2013_p64
 
 
 	/** New multiple lots **/
@@ -154,7 +152,7 @@
 		/*Foreclosures_2013_u26*/
 		/*Foreclosures_2013_u27*/
 		/*Foreclosures_2013_u28*/
-		/*Foreclosures_2013_u29*/
+		Foreclosures_2013_u29
 	)
 
 	run;

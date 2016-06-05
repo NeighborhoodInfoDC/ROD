@@ -1751,8 +1751,8 @@ lastnotice_grantorR="Grantor - last notice of foreclosure - Recoded"
 
 run;
 
-/*x "purge [DCDATA.ROD.DATA]&out.*";*/
-%if &register= Y %then %do; 
+/*x "purge [DCDATA.ROD.DATA]&out.*";
+*%if &register= Y %then %do; 
 
 %Dc_update_meta_file(
   ds_lib=ROD,
@@ -1761,12 +1761,12 @@ run;
   restrictions=None,
   revisions=&revisions
 )  
-
+*/
 run;
 
 %end;
 
-%File_info( data=&out, freqvars=outcome_code outcome_code2 post_sale_reo record_type )
+*%File_info( data=&out, freqvars=outcome_code outcome_code2 post_sale_reo record_type )
 
 run;
 

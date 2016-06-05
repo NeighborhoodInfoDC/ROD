@@ -1,9 +1,9 @@
 /**************************************************************************
- Program:  Foreclosure_sum_all.sas
+ Program:  Foreclosure_sum_voterpre2012.sas
  Library:  ROD
  Project:  NeighborhoodInfo DC
- Author:   L. Hendey
- Created:  06/26/08
+ Author:   L. Hendey/P. Tatian
+ Created:  03/30/14
  Version:  SAS 9.2
  Environment:   Local Windows session (desktop)
  
@@ -410,7 +410,7 @@ options SORTPGM=SAS MSGLEVEL=I;
    	%Dc_update_meta_file(
    	  ds_lib=Rod,
    	  ds_name=Foreclosures_sum&geosuf,
-   	  creator_process=Foreclosure_sum_all.sas,
+   	  creator_process=Foreclosure_sum_voterpre2012.sas,
    	  restrictions=None,
    	  revisions=%str(&revisions)
    	  
@@ -427,21 +427,7 @@ options SORTPGM=SAS MSGLEVEL=I;
 
 ** Create summaries for all geos ***;
 
-%Foreclosure_sum_geo( geo=city, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=ward2002, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=ward2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=geo2000, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=geo2010, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=ANC2002, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=ANC2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=CLUSTER_TR2000, start_yr=&start_yr, end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=EOR, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=PSA2004, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=PSA2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-%Foreclosure_sum_geo( geo=ZIP, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 %Foreclosure_sum_geo( geo=voterpre2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
-
-/***%Foreclosure_sum_geo( geo=GEOBLK2000, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )***/
 
 run;
 

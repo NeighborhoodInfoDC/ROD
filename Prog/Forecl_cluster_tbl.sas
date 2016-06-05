@@ -12,17 +12,17 @@
  SPRING 2009
 
  Modifications: 03/25/10 LH Adjusted for ROD Directory
- 		03/23/11 LH Added 2010. 
+ 				03/23/11 LH Added 2010. 
+				08/11/14 LH Added 2011, 2012, 2013. Updated for SAS1. 
 **************************************************************************/
 
-%include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
-%include "K:\Metro\PTatian\DCData\SAS\Inc\AlphaSignon.sas" /nosource2;
+%include "L:\SAS\Inc\StdLocal.sas"; 
 
 ** Define libraries **;
 %DCData_lib( ROD )
 %DCData_lib( RealProp )
 
-** Start submitting commands to remote server **;
+/** Start submitting commands to remote server **;
 
 rsubmit;
 
@@ -35,23 +35,23 @@ run;
 
 endrsubmit;
 
-** End submitting commands to remote server **;
+** End submitting commands to remote server 
 
 run;
+**/;
 
+%Init_macro_vars_rod( rpt_yr=2011, rpt_qtr=4, sales_qtr_offset=-2 )
 
-%Init_macro_vars_rod( rpt_yr=2010, rpt_qtr=4, sales_qtr_offset=-2 )
-
-%let year = 2010;
-%let rpt_end_dt='31dec2010'd;
-%let suffix=2010_4;
+%let year = 2011;
+%let rpt_end_dt='31dec2011'd;
+%let suffix=2011_4;
 
 
 %macro Foreclosures( out_ds=, unit=, rpt_start_dt='01jan1999'd, rpt_end_dt= );
 
   data &out_ds;
 
-    set Rod.Foreclosures_history;
+    set Rod_r.Foreclosures_history;
     where prev_sale_prp in ( '10', '11', '12', '13' );
     
 	  length 
@@ -152,7 +152,7 @@ run;
     ;
     
     keep 
-      ssl usecode city ward2002 cluster_tr2000 x_coord y_coord geo2000 prev_sale_owncat post_sale_owncat
+      ssl usecode city ward2002 ward2012  cluster_tr2000 x_coord y_coord geo2000 prev_sale_owncat post_sale_owncat
       report_dt firstnotice_date start_dt end_dt adj_start_dt adj_end_dt  new_proptype anc2002 prev_sale_prp
       outcome_date outcome_code outcome_code2 prev_sale_ownocc prev_sale_hstd num_notice zip reo
       in_foreclosure_beg in_foreclosure_end foreclosure_start foreclosure_sale distressed_sale foreclosure_avoided;
@@ -174,7 +174,7 @@ run;
 
 /** End Macro Definition **/
 
-%Foreclosures( out_ds=ROD.Foreclosures_year_&suffix., unit=year, rpt_end_dt='31dec2010'd );
+%Foreclosures( out_ds=ROD_l.Foreclosures_year_&suffix., unit=year, rpt_end_dt=&rpt_end_dt.);
 
 /** Macro Geo - Start Definition **/
 
@@ -191,7 +191,7 @@ run;
 
     merge 
       Chart 
-      RealProp.Num_units_&geosuf (keep=&geo units_sf_condo_: );
+      RealPr_r.Num_units_&geosuf (keep=&geo units_sf_condo_: );
     by &geo;
     
     select ( year( report_dt ) );
@@ -207,7 +207,10 @@ run;
       when ( 2008 ) units_sf_condo = units_sf_condo_2008; 
       when ( 2009 ) units_sf_condo = units_sf_condo_2009; 
       when ( 2010 ) units_sf_condo = units_sf_condo_2010;
-      otherwise units_sf_condo = units_sf_condo_2010;
+	  when ( 2011 ) units_sf_condo = units_sf_condo_2011;
+	  when ( 2012 ) units_sf_condo = units_sf_condo_2012;
+	  when ( 2013 ) units_sf_condo = units_sf_condo_2013;
+      otherwise units_sf_condo = units_sf_condo_2013;
     end;
     
     in_foreclosure_beg_rate = 1000 * in_foreclosure_beg / units_sf_condo;
@@ -234,7 +237,7 @@ run;
 /** End Macro Definition **/
 
 
-%Geo( geo=ward2002, geosuf=wd02 )
+%Geo( geo=ward2012, geosuf=wd12 )
 
 %Geo( geo=cluster_tr2000, geosuf=cltr00 )
 
@@ -249,20 +252,20 @@ data cluster_tr2000_tr;
 
   ** Cluster ward var **;
   
-  length ward2002 $ 1;
+  length ward2012 $ 1;
   
-  ward2002 = put( cluster_tr2000, $cl0wd2f. );
+  ward2012 = put( cluster_tr2000, $cl0wd2f. );
   
-  label ward2002 = 'Ward (cluster-based)';
+  label ward2012 = 'Ward (cluster-based)';
   
 run;
 
 
 ** Merge transposed data together **;
 
-data ROD.Forecl_cluster_tbl_&suffix.;
+data ROD_l.Forecl_cluster_tbl_&suffix.;
 
-  set city_tr ward2002_tr cluster_tr2000_tr;
+  set city_tr ward2012_tr cluster_tr2000_tr;
   
   ** Remove noncluster areas **;
   
@@ -271,13 +274,13 @@ data ROD.Forecl_cluster_tbl_&suffix.;
 run;
 
 proc sort data=ROD.Forecl_cluster_tbl_&suffix.;
-  by ward2002 cluster_tr2000;
+  by ward2012 cluster_tr2000;
 run;
 
 %File_info( data=ROD.Forecl_cluster_tbl_&suffix., printobs=0 )
 
 proc print data=ROD.Forecl_cluster_tbl_&suffix.;
-  id city ward2002 cluster_tr2000;
+  id city ward2012 cluster_tr2000;
   title2 "File = Table";
 run;
 title2;
@@ -289,7 +292,7 @@ title2;
 
 %macro Output_table( start_row=, end_row=, sheet= );
 
-  filename xout dde  "excel|K:\Metro\PTatian\DCData\Libraries\ROD\Prog\[DC Foreclosures Wd Cls &year..xls]&sheet!R&start_row.C1:R&end_row.C16" 
+  filename xout dde  "excel|L:\Libraries\ROD\Prog\[DC Foreclosures Wd Cls &year..xls]&sheet!R&start_row.C1:R&end_row.C16" 
     lrecl=1000 notab;
 
   data _null_;
@@ -297,14 +300,14 @@ title2;
     file xout;
     
     set ROD.Forecl_cluster_tbl_&suffix.;
-    by ward2002;
+    by ward2012;
     
     cluster_num = input( cluster_tr2000, 2. );
     
-    if ward2002 = '' then 
+    if ward2012 = '' then 
       put 'Washington, D.C. Total' '09'x '09'x '09'x '09'x @;
     else if Cluster_tr2000 = '' then 
-      put ward2002 '09'x '09'x '09'x '09'x @;
+      put ward2012 '09'x '09'x '09'x '09'x @;
     else
       put '09'x cluster_num '09'x '09'x Cluster_tr2000 $clus00s. '09'x @;
       
@@ -324,7 +327,7 @@ title2;
       in_foreclosure_end_rate '09'x
     ;
       
-    if last.ward2002 then put;
+    if last.ward2012 then put;
     
   run;
 
