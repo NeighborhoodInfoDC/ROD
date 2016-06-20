@@ -14,15 +14,15 @@
 
 /** Macro BookType - Start Definition **/
 
-%macro BookType(  );
+%macro BookType();
 
   length BookType $ 1;
   
   select ( _dropBookType );
-    when ( 'GENERAL' ) BookType = 'G';
-    when ( 'LAND' ) BookType = 'L';
+    when ( 'GEN' ) BookType = 'G';
+    when ( 'LAN' ) BookType = 'L';
     when ( 'OPR' ) BookType = 'O';
-    when ( 'UNKNOWN', '' ) BookType = '';
+    when ( 'UNK', '' ) BookType = '';
     otherwise do;
       %err_put( macro=BookType, 
                 msg="Invalid BookType: File=&file..csv " _n_= FilingDate= mmddyy10. BookType= Instrument= DocumentNo= )

@@ -58,13 +58,13 @@
   %let geo_list = Anc2002 Anc2012 City Cluster2000 Cluster_tr2000 Eor 
                   Psa2004 Psa2012 Ward2002 Ward2012 Zip Geo2000 Geo2010 GeoBlk2000 GeoBlk2010;
 
-  %syslput year=&year;
-  %syslput out=&out;
-  %syslput out_nolib=&out_nolib;
-  %syslput finalize=&finalize;
-  %syslput revisions=&revisions;
-  %syslput month=&month;
-  %syslput geo_list=&geo_list;
+  *%syslput year=&year;
+  *%syslput out=&out;
+  *%syslput out_nolib=&out_nolib;
+  *%syslput finalize=&finalize;
+  *%syslput revisions=&revisions;
+  *%syslput month=&month;
+  *%syslput geo_list=&geo_list;
 
   ** Read individual files **;
 
