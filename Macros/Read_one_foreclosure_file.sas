@@ -96,9 +96,10 @@
         _i = indexc( square, "ABCDEFGHIJKLMNOPQRSTUVWXYZ" );
         
         if _i > 0 then do;
-          _suffix = substr( square, _i, 1 );
+		  _suffix = substr( square, _i, 2);
           put _n_= DocumentNo= _i= square= _suffix= ;
           square = compress( square, "ABCDEFGHIJKLMNOPQRSTUVWXYZ" );
+		  _suffix = compress( _suffix, "1234567890" );
         end;
         else do;
           _suffix = "";
@@ -178,7 +179,7 @@
       Lot = "Property lot"
       SSL = "Property identification number (square/suffix/lot)"
       MultipleLots = "Document applies to multiple lots (see xLot for detail)"
-      FileDownloadDateTime = "Date/time of download from ROD web site (UI)";
+      FileDownloadDateTime = "Date/time of download from ROD web site (UI)"
       Verified = "Has ROD verified data entry for this record? (UI)";
 
     format FilingDate mmddyy10. MultipleLots Verified dyesno. FileDownloadDateTime datetime.;

@@ -14,18 +14,15 @@
  Modifications: ANW 7/20/10 Include whether or not property is more than 5 units
 **************************************************************************/
 
-%include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
-%include "K:\Metro\PTatian\DCData\SAS\Inc\AlphaSignon.sas" /nosource2;
+%include "L:\SAS\Inc\StdLocal.sas"; 
 
 ** Define libraries **;
 %DCData_lib( Rod )
 %DCData_lib( RealProp )
 
-%let end_dt   = '15June2016'd;
+%let end_dt = '15Jun2016'd;
 
-%let previous_files =   Foreclosure_list_2013_01_14
-						Foreclosure_list_2013_02_11
-						
+*%let previous_files =
 
 
 					  
@@ -42,23 +39,7 @@
 
 %put file_date = &file_date;
 
-%syslput start_dt=&start_dt;
-%syslput end_dt=&end_dt;
-%syslput file_date=&file_date;
-%syslput previous_files=&previous_files;
-%syslput foreclosure_dat=&foreclosure_dat;
-
-** Start submitting commands to remote server **;
-
-rsubmit;
-
-proc upload status=no
-  inlib=Rod 
-  outlib=Work memtype=(data);
-  select &previous_files;
-run;
-
-** Remove previously reported notices **;
+/** Remove previously reported notices **;
 
 data Prev_files;
 
@@ -69,18 +50,17 @@ data Prev_files;
 run;
 
 proc sort data=Prev_files;
-  by filingdate documentno;
+  by filingdate documentno;*/
 
 data Foreclosures;
 
-  merge
-    Rod.&foreclosure_dat
-      (where=(&start_dt <= filingdate <= &end_dt and ui_instrument in ('F1','D1','M1') and ui_proptype =: '1')
+  set Rod.&foreclosure_dat
+      (where=(&start_dt <= filingdate <= &end_dt and ui_instrument in ('F1','F2','F5','F7','D1','M1','L1') and ui_proptype =: '1')
        drop=city cluster2000 eor instrument lot psa2004 square x_coord y_coord multiplelots xlot booktype)
-    Prev_files (in=in_prev);
+    /*Prev_files (in=in_prev)*/;
   by filingdate documentno;
   
-  if not in_prev;
+  *if not in_prev;
   
 run;
     
@@ -116,27 +96,14 @@ run;
 
 %create_own_occ( inds=Foreclosure_list, outds=Foreclosure_list )
 
-** Download data set **;
 
-proc download status=no
-  data=Foreclosure_list 
-  out=Rod.Foreclosure_list_&file_date;
-
-run;
-
-** Download formats **;
-
-proc download status=no
-  inlib=RealProp 
-  outlib=RealProp memtype=(catalog);
-  select Formats;
+ 
+  data ROD.Foreclosure_list_&file_date;
+  set Foreclosure_list;
 
 run;
 
-endrsubmit;
-
-
-ods path mystyles.template(update) sashelp.tmplmst(read);
+/*ods path mystyles.template(update) sashelp.tmplmst(read);
 
 proc template;
   define style template.minimal_mystyle;
@@ -148,21 +115,111 @@ proc template;
     style parskip from Data/
     htmlclass = 'parskip';
  	end;
-	run;
+	run;*/
 
 
 
 
-** End submitting commands to remote server **;
 
-ods tagsets.excelxp file="D:\DCData\Libraries\ROD\Prog\Lists\Foreclosure_list_&file_date..xls" style=template.minimal_mystyle
+
+ods tagsets.excelxp file="D:\DCData\Libraries\ROD\Prog\Lists\Foreclosure_list_&file_date..xls" 
       options( sheet_interval='page' );
 
 ods listing close;
 
-ods tagsets.excelxp options( sheet_name="Notice of Foreclosure Sale");
+ods tagsets.excelxp options( sheet_name="Notice of Foreclosure");
 proc print data=Rod.Foreclosure_list_&file_date. label noobs;
-  where ui_instrument in ('F1')and ui_proptype ne "12";;
+  where ui_instrument in ('F1');;
+  var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD 
+      Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
+      owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
+  format Cluster_tr2000 $clus00f. zip $5.; 
+  label 
+    Verified = 'Verified by ROD'
+    UI_instrument = 'Instrument'
+    FilingDate = 'Filing date'
+    ui_proptype = 'Property type' 
+	usecode= 'Property use'
+    SSL = 'Square/suffix/lot'
+    PREMISEADD = 'Property address' 
+    Zip = 'ZIP'
+    Ward2002 = 'Ward'
+    Anc2002 = 'ANC'
+    Geo2000 = 'Census tract'
+    Cluster_tr2000 = 'Neighborhood cluster'
+    Grantee = 'Owner (from notice)'
+    OWNERNAME = '1st owner name (from OTR)'
+    owner_occ_sale = 'Owner occupied?'
+    OWNNAME2 = '2nd owner name (from OTR)'
+    owner_addr = 'Owner address (from OTR)'
+    hstd_code = 'Homestead exemp. (from OTR)'
+    Grantor = 'Lender/servicer/agent';
+
+run;
+
+ods tagsets.excelxp options( sheet_name="Notice of Condominium Foreclosure");
+proc print data=Rod.Foreclosure_list_&file_date. label noobs;
+  where ui_instrument in ('F2');;
+  var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD 
+      Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
+      owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
+  format Cluster_tr2000 $clus00f. zip $5.; 
+  label 
+    Verified = 'Verified by ROD'
+    UI_instrument = 'Instrument'
+    FilingDate = 'Filing date'
+    ui_proptype = 'Property type' 
+	usecode= 'Property use'
+    SSL = 'Square/suffix/lot'
+    PREMISEADD = 'Property address' 
+    Zip = 'ZIP'
+    Ward2002 = 'Ward'
+    Anc2002 = 'ANC'
+    Geo2000 = 'Census tract'
+    Cluster_tr2000 = 'Neighborhood cluster'
+    Grantee = 'Owner (from notice)'
+    OWNERNAME = '1st owner name (from OTR)'
+    owner_occ_sale = 'Owner occupied?'
+    OWNNAME2 = '2nd owner name (from OTR)'
+    owner_addr = 'Owner address (from OTR)'
+    hstd_code = 'Homestead exemp. (from OTR)'
+    Grantor = 'Lender/servicer/agent';
+
+run;
+
+ods tagsets.excelxp options( sheet_name="Trustees Deed Sale");
+proc print data=Rod.Foreclosure_list_&file_date. label noobs;
+  where ui_instrument in ('F5');;
+  var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD 
+      Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
+      owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
+  format Cluster_tr2000 $clus00f. zip $5.; 
+  label 
+    Verified = 'Verified by ROD'
+    UI_instrument = 'Instrument'
+    FilingDate = 'Filing date'
+    ui_proptype = 'Property type' 
+	usecode= 'Property use'
+    SSL = 'Square/suffix/lot'
+    PREMISEADD = 'Property address' 
+    Zip = 'ZIP'
+    Ward2002 = 'Ward'
+    Anc2002 = 'ANC'
+    Geo2000 = 'Census tract'
+    Cluster_tr2000 = 'Neighborhood cluster'
+    Grantee = 'Owner (from notice)'
+    OWNERNAME = '1st owner name (from OTR)'
+    owner_occ_sale = 'Owner occupied?'
+    OWNNAME2 = '2nd owner name (from OTR)'
+    owner_addr = 'Owner address (from OTR)'
+    hstd_code = 'Homestead exemp. (from OTR)'
+    Grantor = 'Lender/servicer/agent';
+
+run;
+
+ods tagsets.excelxp options( sheet_name="Foreclosure Affidavit");
+proc print data=Rod.Foreclosure_list_&file_date. label noobs;
+  where ui_instrument in ('F7');;
   var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD 
       Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
       owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
@@ -192,7 +249,7 @@ run;
 
 ods tagsets.excelxp options( sheet_name="Foreclosure Default Notice");
 proc print data=Rod.Foreclosure_list_&file_date. label noobs;
-  where ui_instrument in ('D1')and ui_proptype ne "12";;
+  where ui_instrument in ('D1');;
   var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD 
       Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
       owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
@@ -222,7 +279,7 @@ run;
 
 ods tagsets.excelxp options( sheet_name="Foreclosure Mediation Certificate");
 proc print data=Rod.Foreclosure_list_&file_date. label noobs;
-  where ui_instrument in ('M1')and ui_proptype ne "12";;
+  where ui_instrument in ('M1');;
   var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD 
       Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
       owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
@@ -252,7 +309,7 @@ run;
 
 ods tagsets.excelxp options( sheet_name="Coop Notice of Foreclosure Sale");
 proc print data=Rod.Foreclosure_list_&file_date. label noobs;
-  where ui_instrument in ('F1') and ui_proptype= "12";
+  where ui_instrument in ('F1, F2') and ui_proptype= "12";;
   var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD UnitNo_Coop
       Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
       owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
@@ -282,7 +339,7 @@ run;
 
 ods tagsets.excelxp options( sheet_name="Coop Foreclosure Default Notice");
 proc print data=Rod.Foreclosure_list_&file_date. label noobs;
-  where ui_instrument in ('D1') and ui_proptype= "12";
+  where ui_instrument in ('D1') and ui_proptype= "12";;
   var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD UnitNo_Coop
       Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
       owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
@@ -312,7 +369,7 @@ run;
 
 ods tagsets.excelxp options( sheet_name="Coop Foreclosure Mediation Certificate");
 proc print data=Rod.Foreclosure_list_&file_date. label noobs;
-  where ui_instrument in ('M1') and ui_proptype= "12";
+  where ui_instrument in ('M1') and ui_proptype= "12";;
   var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD UnitNo_Coop
       Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
       owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
@@ -340,11 +397,37 @@ proc print data=Rod.Foreclosure_list_&file_date. label noobs;
 
 run;
 
+ods tagsets.excelxp options( sheet_name="Lis Pendens");
+proc print data=Rod.Foreclosure_list_&file_date. label noobs;
+  where ui_instrument in ('L1');;
+  var FilingDate DocumentNo ui_proptype usecode SSL PREMISEADD UnitNo_Coop
+      Zip Ward2002 Anc2002 Geo2000 Cluster_tr2000 
+      owner_occ_sale Grantee OWNERNAME OWNNAME2 owner_addr hstd_code Grantor   Verified;
+  format Cluster_tr2000 $clus00f. zip $5.; 
+  label 
+    Verified = 'Verified by ROD'
+    UI_instrument = 'Instrument'
+    FilingDate = 'Filing date'
+    ui_proptype = 'Property type' 
+	usecode= 'Property use'
+    SSL = 'Square/suffix/lot'
+    PREMISEADD = 'Property address' 
+    Zip = 'ZIP'
+    Ward2002 = 'Ward'
+    Anc2002 = 'ANC'
+    Geo2000 = 'Census tract'
+    Cluster_tr2000 = 'Neighborhood cluster'
+    Grantee = 'Owner (from notice)'
+    OWNERNAME = '1st owner name (from OTR)'
+    owner_occ_sale = 'Owner occupied?'
+    OWNNAME2 = '2nd owner name (from OTR)'
+    owner_addr = 'Owner address (from OTR)'
+    hstd_code = 'Homestead exemp. (from OTR)'
+    Grantor = 'Lender/servicer/agent';
 
+run;
 ods tagsets.excelxp close;
 
 ods listing;
 
 run;
-
-signoff;

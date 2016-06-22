@@ -23,9 +23,9 @@
   select ( Instrument );
     when ( "FORECLOSURE NOTICE" )
       UI_instrument = 'F1';
-    when ( "CONDO FORECLOSURE RELEASE" )
-      UI_instrument = 'F2';
     when ( "CONDO FORECLOSURE NOTICE" )
+      UI_instrument = 'F2';
+	when ( "CONDO FORECLOSURE RELEASE" )
       UI_instrument = 'F3';
     when ( "FORECLOSURE NOTICE OF CANCELLATION" )
       UI_instrument = 'F4';

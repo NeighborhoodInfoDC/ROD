@@ -16,14 +16,14 @@
   01/26/12 RP  Added D1 and M1 to the $uinstr format.
 **************************************************************************/
 
-%include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
+%include "L:\SAS\Inc\StdLocal.sas"; 
 ** Define libraries **;
 %DCData_lib( ROD )
 
 proc format library=ROD;
   value $uinstr
-	'F1' = 'Notice of foreclosure sale'
-	'F2' = 'Condominium foreclosure'
+	'F1' = 'Notice of foreclosure'
+	'F2' = 'Notice of condominium foreclosure'
 	'F3' = 'Notice of foreclosure assessment'
 	'F4' = 'Notice of foreclosure cancellation'
 	'F5' = 'Trustees deed sale'
