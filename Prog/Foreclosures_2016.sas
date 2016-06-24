@@ -1,17 +1,13 @@
 /**************************************************************************
-	 Program:  Foreclosures_2014.sas
+	 Program:  Foreclosures_2016.sas
 	 Library:  ROD
 	 Project:  NeighborhoodInfo DC
-	 Author:   B. Losoya
-	 Created:  01/27/14
+	 Author:   M. Cohen
+	 Created:  6/24/2016
 	 Version:  SAS 9.1
 	 Environment:  Local Windows session (desktop)
 	 
-	 Description:  Read foreclosure data for 2013.
-
-	 Modifications:
-	   01/27/14 BJL Added verified thr. 01/15/13 and unverified thr. 01/27/13
-		
+	 Description:  Read foreclosure data for 2016.		
 **************************************************************************/
 
 	
@@ -26,30 +22,40 @@
 
 	%Read_foreclosures(
 	  finalize=N, 
-	  revisions = %str(Added verified thr. 01/27/14, unverified thr. 02/10/14)  ,
-	  year = 2014,
+	  revisions = %str(Added thr. 06/10/16),
+	  year = 2016,
 	  files = 
 
 	/** Verified data (include all YTD files) **/
-	   Foreclosures_2014_p1
-	   Foreclosures_2014_p2
-	   Foreclosures_2014_p3
-	   Foreclosures_2014_p4
-	   
-
+	   Foreclosures_2016_p1
+	   Foreclosures_2016_p2
+	   Foreclosures_2016_p3
+	   Foreclosures_2016_p4
+	   Foreclosures_2016_p5
+	   Foreclosures_2016_l1
+	   Foreclosures_2016_l2
+	   Foreclosures_2016_l3
+	   Foreclosures_2016_l4
+	   Foreclosures_2016_l5
+	   Foreclosures_2016_l6
+	   Foreclosures_2016_l7
+	   Foreclosures_2016_l8
+	   Foreclosures_2016_l9
+	   Foreclosures_2016_l10
+	   Foreclosures_2016_l11
+	   Foreclosures_2016_l12
+	   Foreclosures_2016_l13
+	   Foreclosures_2016_l14
+	   Foreclosures_2016_l15
 
 	/** New multiple lots **/
 		
 
 			/** MED DEVELOPERS, LLC;**/
-	
 
-	/** Unverified data (comment out all but the newest file) **/
-		
-		/*Foreclosures_2014_u1*/
-		Foreclosures_2014_u2
 	)
 
+options  mprint=y symbolgen=y;  
 	run;
 
 

@@ -14,16 +14,17 @@
    06/16/08 L Hendey - Compress Square for '-/'
    11/23/08 PAT  Added FileDownloadDateTime (date/time of CSV file).
    11/24/08 PAT  Added Year to Raw file folder path.
+  6/24/2016 MC  Updated to match new ROD data format (renamed/added vars, added code to deal with leading blanks and two digit suffix's)  
 **************************************************************************/
 
 /** Macro Read_one_foreclosure_file - Start Definition **/
 
 %macro Read_one_foreclosure_file( file=, year= );
 
-  %Get_file_date( &_dcdata_path\ROD\raw\&year\&file..csv )
+  *%Get_file_date( &_dcdata_path\ROD\raw\&year\&file..csv*; 
 
-  filename inf  "&_dcdata_path\ROD\raw\&year\&file..csv" lrecl=1000;
-  
+  filename inf  "&_dcdata_r_path\ROD\raw\&year\&file..csv" lrecl=1000;
+
   ** Determine whether verified or unverified data **;
   
   data _null_;
@@ -39,33 +40,42 @@
     else
       call symput( '_fcl_verified', '1' );
       
-  run;  
+  run; 
 
   ** Read foreclosure notice records from CSV file **;
 
   data &file (compress=no);
   
-    retain FileDownloadDateTime &filedatetime Verified &_fcl_verified;
+    retain FileDownloadDateTime /*&filedatetime*/ Verified &_fcl_verified;
 
     infile inf dsd stopover firstobs=7;
 
     input
-      FilingDate :mmddyy10. @;
+	_drop1 $
+      DocumentNo :$10. @;
       
-    if missing( FilingDate ) then stop;
+    if missing( DocumentNo ) then stop;
     
     input
-      _drop1 $ _drop2 $ _drop3 $ _drop4 $ _drop5 $
-      _dropBookType :$10.
-      Instrument :$40.
-      DocumentNo :$10.
+      _dropBookType :$3.
+      _drop2 $
       Grantor :$80.
+      _drop3 $
       Grantee :$80.
+      Instrument :$40.
+      _FilingDate :$11.
       _drop6 $
-      Square :$8.
-      xLot :$16.
+      _Square :$8.
+      _xLot :$16.
     ;
-    
+
+  ** Remove leading blanks **;
+
+	CFilingDate = SUBSTR(_FilingDate, 2);
+	FilingDate = INPUT (CFilingDate, mmddyy10.);
+	Square = SUBSTR(_square, 2);
+	xLot = SUBSTR(_xLot, 2);
+
     ** Recoded vars **;
     
     %UI_instrument()
@@ -74,7 +84,7 @@
     
     ** Reformat grantor and grantee names **;
     
-    Grantor = propcase( Grantor );
+   Grantor = propcase( Grantor );
     Grantee = propcase( Grantee );
     
     ** Reformat square number **;
@@ -89,9 +99,10 @@
         _i = indexc( square, "ABCDEFGHIJKLMNOPQRSTUVWXYZ" );
         
         if _i > 0 then do;
-          _suffix = substr( square, _i, 1 );
+		  _suffix = substr( square, _i, 2);
           put _n_= DocumentNo= _i= square= _suffix= ;
           square = compress( square, "ABCDEFGHIJKLMNOPQRSTUVWXYZ" );
+		  _suffix = compress( _suffix, "1234567890" );
         end;
         else do;
           _suffix = "";
@@ -176,7 +187,7 @@
 
     format FilingDate mmddyy10. MultipleLots Verified dyesno. FileDownloadDateTime datetime.;
     
-    drop _i _drop: _suffix _nsquare;
+    drop _i _drop: _suffix _nsquare _filingdate cfilingdate _square _xlot;
     
   run;
 

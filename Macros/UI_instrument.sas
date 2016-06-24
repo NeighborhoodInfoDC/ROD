@@ -10,6 +10,7 @@
  Description:  Autocall macro to create UI_instrument var.
 
  Modifications: Adding rcords for Notices of Default 01/26/12 RP
+6/24/2016  MC  Added L1, L2, and D2. Renamed when statements to match new ROD data format.
 **************************************************************************/
 
 /** Macro UI_instrument - Start Definition **/
@@ -21,23 +22,33 @@
   length UI_instrument $ 2;
   
   select ( Instrument );
-    when ( "NOTICE FORECLO SALE", "FORECLOSURES" )
+    when ( "FORECLOSURE NOTICE" )
       UI_instrument = 'F1';
-    when ( "CONDO FORECLOSE REL" )
+    when ( "CONDO FORECLOSURE NOTICE" )
       UI_instrument = 'F2';
-    when ( "NOTICE FORECL ASSESS" )
+	when ( "CONDO FORECLOSURE RELEASE" )
       UI_instrument = 'F3';
-    when ( "NOTICE CANCEL FOREC" )
+    when ( "FORECLOSURE NOTICE OF CANCELLATION" )
       UI_instrument = 'F4';
     when ( "TRUSTEES DEED" )
       UI_instrument = 'F5';
-	 when ( "FORECL DEFAULT NOTE" )
+	  when ( "FORECLOSURE RELEASE NOTICE" )
+	  UI_instrument = 'F6';
+	  when ( "FORECLOSURE AFFIDAVIT" )
+	  UI_instrument = 'F7';
+	 when ( "FORECLOSURE DEFAULT NOTICE" )
       UI_instrument = 'D1';
-	 when ( "FORECLOSE MEDIA CERT" )
+	 when ( "FORECLOSURE CANCELLATION OF DEFAULT" )
+      UI_instrument = 'D2';
+	 when ( "FORECLOSURE MEDIATION CERTIFICATE" )
       UI_instrument = 'M1';
+	 when ( "LIS PENDENS" )
+      UI_instrument = 'L1';
+	 when ( "LIS PENDENS RELEASE" )
+      UI_instrument = 'L2';
     otherwise do;
       %err_put( macro=UI_instrument, 
-                msg="Record is not a foreclosure and will be deleted: File=&file..csv " _n_= FilingDate= mmddyy10. Instrument= DocumentNo= )
+                msg="Record is not a foreclosure and will be deleted: File=&file..csv " _n_= Filingdate= mmddyy10. Instrument= DocumentNo= )
       delete;
     end;
   end;
