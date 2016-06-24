@@ -14,6 +14,7 @@
    06/16/08 L Hendey - Compress Square for '-/'
    11/23/08 PAT  Added FileDownloadDateTime (date/time of CSV file).
    11/24/08 PAT  Added Year to Raw file folder path.
+  6/24/2016 MC  Updated to match new ROD data format (renamed/added vars, added code to deal with leading blanks and two digit suffix's)  
 **************************************************************************/
 
 /** Macro Read_one_foreclosure_file - Start Definition **/
@@ -67,7 +68,9 @@
       _Square :$8.
       _xLot :$16.
     ;
- 
+
+  ** Remove leading blanks **;
+
 	CFilingDate = SUBSTR(_FilingDate, 2);
 	FilingDate = INPUT (CFilingDate, mmddyy10.);
 	Square = SUBSTR(_square, 2);

@@ -10,6 +10,7 @@
  Description:  Autocall macro to create UI_instrument var.
 
  Modifications: Adding rcords for Notices of Default 01/26/12 RP
+6/24/2016  MC  Added L1, L2, and D2. Renamed when statements to match new ROD data format.
 **************************************************************************/
 
 /** Macro UI_instrument - Start Definition **/

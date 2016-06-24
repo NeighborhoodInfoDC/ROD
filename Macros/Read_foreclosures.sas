@@ -34,6 +34,7 @@
                Final data set now sorted by FilingDate DocumentNo ssl.
                Changed Ward2002 to Ward2012 throughout.
 1/27/2014  BL  Updated for SAS Server
+6/24/2016  MC  Commented out syslput references
 **************************************************************************/
 
 /** Macro Read_foreclosures - Start Definition **/

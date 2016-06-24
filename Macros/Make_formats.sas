@@ -14,6 +14,7 @@
   05/08/09 PAT Updated outcomII value 6 label.
   07/09/09 LH  Added owncat format.
   01/26/12 RP  Added D1 and M1 to the $uinstr format.
+6/24/2016  MC  Updated $uinstr formats to match new ROD data format; added L1, L2 and D2
 **************************************************************************/
 
 %include "L:\SAS\Inc\StdLocal.sas"; 

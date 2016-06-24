@@ -2,16 +2,12 @@
 	 Program:  Foreclosures_2016.sas
 	 Library:  ROD
 	 Project:  NeighborhoodInfo DC
-	 Author:   B. Losoya
-	 Created:  01/27/14
+	 Author:   M. Cohen
+	 Created:  6/24/2016
 	 Version:  SAS 9.1
 	 Environment:  Local Windows session (desktop)
 	 
-	 Description:  Read foreclosure data for 2016.
-
-	 Modifications:
-	   01/27/14 BJL Added verified thr. 01/15/13 and unverified thr. 01/27/13
-		
+	 Description:  Read foreclosure data for 2016.		
 **************************************************************************/
 
 	
