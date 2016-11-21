@@ -128,7 +128,7 @@
     
     length Lot $ 8 MultipleLots 3;
     
-    _i = indexc( xlot, "-,&" );
+   _i = indexc( xlot, "-,&" );
     
     if _i > 0 then do;
     
@@ -138,14 +138,14 @@
       
       lot = substr( xlot, 1, _i - 1 );
 
-      lot = put( input( lot, 8. ), z4. );
+      lot = put( input( lot, $8. ), $4. );
       
       MultipleLots = 1;
       
     end;
     else do;
 
-      lot = put( input( xlot, 8. ), z4. );
+      lot = put( input( xlot, $8. ), $4. );
       
       MultipleLots = 0;
       
