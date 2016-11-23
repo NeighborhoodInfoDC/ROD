@@ -59,13 +59,6 @@
   %let geo_list = Anc2002 Anc2012 City Cluster2000 Cluster_tr2000 Eor 
                   Psa2004 Psa2012 Ward2002 Ward2012 Zip Geo2000 Geo2010 GeoBlk2000 GeoBlk2010;
 
-  *%syslput year=&year;
-  *%syslput out=&out;
-  *%syslput out_nolib=&out_nolib;
-  *%syslput finalize=&finalize;
-  *%syslput revisions=&revisions;
-  *%syslput month=&month;
-  *%syslput geo_list=&geo_list;
 
   ** Read individual files **;
 
@@ -168,8 +161,8 @@
   proc sql;
     create table _read_forecl (label="Property foreclosure notices, &year, DC") as
     select all_files_fix2.*, geo.*, base.ssl, base.ui_proptype
-    	from all_files_fix2 left join RealPr_L.Parcel_geo (keep=ssl x_coord y_coord &geo_list) as geo on (all_files_fix2.ssl = geo.ssl)
-    		           left join RealPr_L.Parcel_base as base on (all_files_fix2.ssl=base.ssl) 
+    	from all_files_fix2 left join RealPr_r.Parcel_geo (keep=ssl x_coord y_coord &geo_list) as geo on (all_files_fix2.ssl = geo.ssl)
+    		           left join RealPr_r.Parcel_base as base on (all_files_fix2.ssl=base.ssl) 
     	   
     order by FilingDate, DocumentNo, ssl; 
   quit;
@@ -199,7 +192,7 @@
       create table _read_forecl_c (label="Property foreclosure notices Square, &year, DC") as
       select *
       	from _read_forecl_a (drop=&geo_list) as a 
-      	left join RealPr_L.square_geo (keep=square &geo_list) as geo
+      	left join RealPr_r.square_geo (keep=square &geo_list) as geo
       		on (a.square = geo.square)
       order by FilingDate, DocumentNo, ssl;
     quit;
