@@ -68,8 +68,8 @@
 
 	/** Unverified data (comment out all but the newest file) **/
 		
-		/*Foreclosures_2014_u1*/
-		Foreclosures_2014_u2
+		/*Foreclosures_2014_u1
+		Foreclosures_2014_u2*/
 	)
 
 	run;

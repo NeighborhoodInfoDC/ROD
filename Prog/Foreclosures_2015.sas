@@ -40,7 +40,7 @@
     Foreclosures_2015_l3
     Foreclosures_2015_l4
     Foreclosures_2015_l5
-    Foreclosures_2015_l6
+    /*Foreclosures_2015_l6*/
     Foreclosures_2015_l7
     Foreclosures_2015_l8
     Foreclosures_2015_l9
@@ -72,6 +72,7 @@
     Foreclosures_2015_l35
 	DOC2015079856
 	DOC2015122913
+	DOC2015061448
 	/** New multiple lots **/
 		
 
