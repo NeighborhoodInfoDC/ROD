@@ -20,6 +20,7 @@
   02/25/14 LH 	Update for 2013 and SAS1. 
   03/30/14 PAT Added summary for voterpre2012.
                Changed RealProp library ref to RealPr_r.
+  03/15/18 NS  Added Cluster2017 to foreclosure data
 **************************************************************************/
 
 %include "L:\SAS\Inc\StdLocal.sas"; 
@@ -440,6 +441,7 @@ options SORTPGM=SAS MSGLEVEL=I;
 %Foreclosure_sum_geo( geo=PSA2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 %Foreclosure_sum_geo( geo=ZIP, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 %Foreclosure_sum_geo( geo=voterpre2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
+%Foreclosure_sum_geo( geo=Cluster2017, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 
 /***%Foreclosure_sum_geo( geo=GEOBLK2000, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )***/
 
