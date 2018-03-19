@@ -20,6 +20,7 @@
   02/25/14 LH 	Update for 2013 and SAS1. 
   03/30/14 PAT Added summary for voterpre2012.
                Changed RealProp library ref to RealPr_r.
+  03/15/18 NS  Added Cluster2017 to foreclosure data
 **************************************************************************/
 
 %include "L:\SAS\Inc\StdLocal.sas"; 
@@ -37,7 +38,7 @@ options SORTPGM=SAS MSGLEVEL=I;
 /** Update with information on latest file revision **/
 /*%let revisions = %str(Verified thr. 12/31/11);*/
 /*%let revisions = %str(Verified thr. 12/31/12);*/
-%let revisions = %str(Verified thr. 12/31/13);
+%let revisions = %str(Updated for cluster 2017 geography);
 
 /** Update with latest year of foreclosure notice data **/
 %let end_yr = 2013;
@@ -382,7 +383,7 @@ options SORTPGM=SAS MSGLEVEL=I;
 
    %Pop_option( Compress )
    
-   data ROD_r.Foreclosures_sum&geosuf (label="Foreclosure Notices Summary, DC, &geodlbl" sortedby=&geo);
+   data Foreclosures_sum&geosuf (label="Foreclosure Notices Summary, DC, &geodlbl" sortedby=&geo);
    
    	set ALL_Foreclosures_geo_tr;
    	
@@ -398,25 +399,23 @@ options SORTPGM=SAS MSGLEVEL=I;
    
    /*x "purge [dcdata.rod.data]Foreclosures_sum&geosuf..*";*/
    
-   proc datasets library=work kill memtype=(data);
-   quit;
+   /*proc datasets library=work kill memtype=(data);
+   quit;*/
 
-   %File_info( data=ROD_r.Foreclosures_sum&geosuf, printobs=0)
+
+   %Finalize_data_set(
+    data=Foreclosures_sum&geosuf,
+    out=Foreclosures_sum&geosuf,
+    outlib=Rod,
+    label="Foreclosure Notices Summary, DC, &geodlbl",
+    sortby=&geo,
+    /** Metadata parameters **/
+    revisions=%str(&revisions),
+    /** File info parameters **/
+    printobs=5
+  )
    
-   %if &register = Y %then %do;
-   	
-   	** Register in metadata **;
-   	
-   	%Dc_update_meta_file(
-   	  ds_lib=Rod,
-   	  ds_name=Foreclosures_sum&geosuf,
-   	  creator_process=Foreclosure_sum_all.sas,
-   	  restrictions=None,
-   	  revisions=%str(&revisions)
-   	  
-   	 )
-   	 
-   %end;
+
    
    %exitmacro:
    
@@ -440,6 +439,8 @@ options SORTPGM=SAS MSGLEVEL=I;
 %Foreclosure_sum_geo( geo=PSA2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 %Foreclosure_sum_geo( geo=ZIP, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 %Foreclosure_sum_geo( geo=voterpre2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
+%Foreclosure_sum_geo( geo=Cluster2017, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
+%Foreclosure_sum_geo( geo=BridgePk, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 
 /***%Foreclosure_sum_geo( geo=GEOBLK2000, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )***/
 
