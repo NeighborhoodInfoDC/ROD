@@ -440,6 +440,7 @@ options SORTPGM=SAS MSGLEVEL=I;
 %Foreclosure_sum_geo( geo=ZIP, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 %Foreclosure_sum_geo( geo=voterpre2012, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 %Foreclosure_sum_geo( geo=Cluster2017, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
+%Foreclosure_sum_geo( geo=BridgePk, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )
 
 /***%Foreclosure_sum_geo( geo=GEOBLK2000, start_yr=&start_yr,end_yr=&end_yr, revisions=&revisions, register=&register )***/
 
